@@ -36,12 +36,6 @@ const WasteUploadPage: React.FC = () => {
   const [classificationProgress, setClassificationProgress] = useState(0);
   const [classificationResult, setClassificationResult] = useState<MaterialClassification[] | null>(null);
 
-  const handleImageDrop = useCallback((e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    const files = Array.from(e.dataTransfer.files).filter(f => f.type.startsWith('image/'));
-    addImages(files);
-  }, [addImages]);
-
   const addImages = useCallback((files: File[]) => {
     const newImages = [...images, ...files].slice(0, 5);
     setImages(newImages);
@@ -54,7 +48,13 @@ const WasteUploadPage: React.FC = () => {
     
     // Reset classification when images change
     setClassificationResult(null);
-  }, [images, previews]);
+  }, [images]);
+
+  const handleImageDrop = useCallback((e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    const files = Array.from(e.dataTransfer.files).filter(f => f.type.startsWith('image/'));
+    addImages(files);
+  }, [addImages]);
 
   const removeImage = (index: number) => {
     URL.revokeObjectURL(previews[index]);
